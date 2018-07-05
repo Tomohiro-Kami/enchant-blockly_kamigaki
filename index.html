@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<head>
+    <title>Blockly</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        .FLEX {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+        #blocklyArea {
+            height: 99%;
+            background: #888888;
+            text-align: center;
+        }
+        #theme{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 10%;
+        }
+        #select_button {
+            margin: 0;
+            padding: 0;
+            width: 22.5%;
+            height: 5%;
+            text-align: center;
+        }
+        #sample_button, #test_button{
+            margin: 0;
+            padding: 0;
+            width: 45%;
+            height:100%
+        }
+        #sample, #test {
+            margin: 0;
+            padding: 0;
+            width: 22.5%;
+            height: 42.5%;
+            background-color: blueviolet;
+        }
+        #blocklyDiv {
+            margin: 0;
+            padding: 0;
+            height: 90%;
+            width: 40%;
+        }
+        #button_menu {
+            margin: 0;
+            padding: 0;
+            width: 8.5%;
+            height: 90%;
+            background-color: aqua;
+        }
+        #button, #button2, #button3{
+            width: 100%;
+            height: 50px;
+        }
+        #honyaku{
+            margin: 0;
+            padding: 0;
+            width: 29%;
+            height: 90%;
+            background-color: black;
+        }
+        #outputArea {
+            margin: 0;
+            padding: 0;
+            width: 99%;
+            height: 98%;
+        }
+    </style>
+        
+    <!--本体モジュール-->
+    <script src="blockly/blockly_compressed.js"></script>
+    <!--ソースコード出力-->
+    <script src="blockly/javascript_compressed.js"></script>
+    <!--ソースコード出力用関数-->
+    <script>
+        function ShowCode_1(event) {
+            var code  = Blockly.JavaScript.workspaceToCode(workspace);
+            document.getElementById('outputArea').value = code;
+        }
+        function ShowCode_2(event) {
+            var Code  = Blockly.JavaScript.workspaceToCode(workspace);
+            var Json_Code = JSON.stringify(Code);
+            localStorage.setItem("TESTcode", Json_Code);
+            var in_te = document.getElementById("include_test");
+            var tmp_src = in_te.src;
+            in_te.src = '';
+            in_te.src = tmp_src;
+            in_te.focus();
+        }
+        function ShowCode_3(event) {
+            localStorage.clear();
+            alert("コード初期化しました\n");
+        }
+        workspace.addChangeListener(ShowCodeRealTime);
+    </script>
+    <!--Blockモジュール-->
+    <script src="blockly/blocks/start_block.js"></script>
+    <script src="blockly/blocks/game_start_block.js"></script>
+    <script src="blockly/blocks/mountain_block.js"></script>
+    <script src="blockly/blocks/forest_block.js"></script>
+    <script src="blockly/blocks/grassland_block.js"></script>
+    <script src="blockly/blocks/number_block.js"></script>
+    <script src="blockly/blocks/order_block.js"></script>
+    <script src="blockly/blocks/goal_block.js"></script>
+    <!--ソースコードジェネレーターモジュール-->
+    <script src="blockly/generators/javascript/start.js"></script>
+    <script src="blockly/generators/javascript/game_start.js"></script>
+    <script src="blockly/generators/javascript/mountain.js"></script>
+    <script src="blockly/generators/javascript/forest.js"></script>
+    <script src="blockly/generators/javascript/grassland.js"></script>
+    <script src="blockly/generators/javascript/number.js"></script>
+    <script src="blockly/generators/javascript/order.js"></script>
+    <script src="blockly/generators/javascript/goal.js"></script>
+    <!--日本語に翻訳-->
+    <script src="blockly/msg/js/ja.js"></script>
+</head>
+<body>
+    <!--Blockly埋め込みエリア-->
+    <h1 id="theme">Blockly</h1>
+    <div class="FLEX">
+        <div id="select_button">
+            <button id="sample_button">サンプル</button>
+            <button id="test_button">テスト</button>
+        </div>
+        <div id="sample">
+            <iframe id="include_sample" class="SAMPLE" width="100%" height="100%" src="SAMPLE/include_sample.html" scrolling="no" frameborder="1"></iframe>
+            <script>
+                var in_sam = document.getElementById("include_sample");
+                document.getElementById( "sample_button" ).onclick = function () {
+                    var tmp_src = in_sam.src;
+                    in_sam.src = '';
+                    in_sam.src = tmp_src;
+                    in_sam.focus();
+                }        
+            </script>
+        </div>
+        <div id="test">
+            <iframe id="include_test" class="TEST" width="100%" height="100%" src="TEST/include_test.html" scrolling="no" frameborder="1"></iframe>
+            <script>
+                var in_te = document.getElementById("include_test");
+                document.getElementById( "test_button" ).onclick = function () {
+                    var tmp_src = in_te.src;
+                    in_te.src = '';
+                    in_te.src = tmp_src;
+                    in_te.focus();
+                }
+            </script>
+        </div>
+        <div id="blocklyDiv"></div>
+        <div id="button_menu">
+            各種言語化機能<br>
+            <button onclick="ShowCode_1()" id="button">Javascript</button><br>
+            <button onclick="ShowCode_2()" id="button2">コード実行</button><br>
+            <button onclick="ShowCode_3()" id="button3">コード初期化</button><br>
+        </div>
+        <div id="honyaku">
+            <td><textarea id="outputArea"></textarea></td>   
+        </div>
+    </div>
+    <!--ツールボックス-->
+    <xml id="toolbox" style="display: none">
+        <category name="スタートとゴール">
+            <block type="start"></block>
+            <block type="goal"></block>
+        </category>
+        <category name="ゲーム開始">
+            <block type="game_start"></block>
+        </category>
+        <category name="背景">
+            <block type="mountain"></block>
+            <block type="forest"></block>
+            <block type="grassland"></block>
+        </category>
+        <category name="数字">
+            <block type="number"></block>
+        </category>
+        <category name="命令">
+            <block type="order"></block>
+        </category>
+    </xml>
+
+    <script>
+        var workspace = Blockly.inject(blocklyDiv,
+        {toolbox: document.getElementById('toolbox'),
+        grid:{
+            spacing: 20,
+            length: 3,
+            colour: '#ccc',
+            snap: true},
+            trashcan: true});
+    </script>
+</body>
